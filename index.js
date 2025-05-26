@@ -8,15 +8,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// ExpressとBoltの統合（challenge対応）
+// ExpressとBoltの統合
 const customApp = express();
 customApp.use(bodyParser.json());
-
-customApp.post('/slack/events', (req, res) => {
-  if (req.body.type === 'url_verification') {
-    return res.send({ challenge: req.body.challenge });
-  }
-});
 
 const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -48,6 +42,7 @@ app.event('app_mention', async ({ event, say }) => {
 // アプリを起動
 (async () => {
   const port = process.env.PORT || 3000;
-  await app.start(port);
-  console.log(`⚡️ Slack Gemini Bot is running on port ${port}!`);
+  customApp.listen(port, () => {
+    console.log(`⚡ Slack Gemini Bot is running on port ${port}!`);
+  });
 })();
