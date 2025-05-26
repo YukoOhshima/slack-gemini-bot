@@ -3,16 +3,16 @@ const { App, ExpressReceiver } = require('@slack/bolt');
 const express = require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Gemini API 初期化
+// Gemini API 初期化（モデル名を最新版に変更！）
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-pro",
+  model: "gemini-1.5-pro-latest", // ✅ 修正ポイント！
   generationConfig: {
     temperature: 0.9
   }
 });
 
-// ExpressとBoltの統合（bodyParser は不要！）
+// ExpressとBoltの統合
 const customApp = express();
 
 const receiver = new ExpressReceiver({
