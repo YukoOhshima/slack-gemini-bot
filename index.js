@@ -1,16 +1,14 @@
 require('dotenv').config();
 const { App, ExpressReceiver } = require('@slack/bolt');
 const express = require('express');
-const bodyParser = require('body-parser');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Gemini API 初期化
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// ExpressとBoltの統合
+// ExpressとBoltの統合（bodyParser は不要！）
 const customApp = express();
-customApp.use(bodyParser.json());
 
 const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
